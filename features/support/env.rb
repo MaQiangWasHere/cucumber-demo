@@ -1,11 +1,14 @@
 require 'rubygems'
 require 'selenium-webdriver'
+require 'capybara/cucumber'
 
-Before do
-  @driver = Selenium::WebDriver.for :firefox
+Capybara.default_driver= :selenium
+
+module Capybara
+  module DSL
+    alias :response :page
+  end
 end
 
-After do
-  @driver.quit
-end  
+Capybara.default_wait_time = 30
 

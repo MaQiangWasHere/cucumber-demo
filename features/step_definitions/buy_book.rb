@@ -1,5 +1,5 @@
 Given /^I open "(.*?)"$/ do |site|
-  @driver.get site
+  visit site
 end
 
 When /^I search for "(.*?)"$/ do |keyword|
@@ -8,18 +8,22 @@ When /^I search for "(.*?)"$/ do |keyword|
 end
 
 And /^I buy the book$/ do
-  clickElementBy("class", "btn-buy")
+  find('.btn-buy').click
+end
+
+def switch_to_new_window
+  page.driver.browser.switch_to.window(page.driver.browser.window_handles.last)
 end
 
 Then /^I should see the book in my shopping cart$/ do
-  gotoShoppingCart
-  verifyItemShowInShoppingCart(@keyword)
+  switch_to_new_window()
+  click_link "GotoShoppingCart"
+  page.should have_css(".p-name", :text => @keyword)
 end
 
 def searchByKeyword (keyword)
-  searchKeyword=@driver.find_element :id => "key"
-  searchKeyword.send_keys keyword
-  clickElementBy("class", "button")
+  fill_in 'key', :with => keyword
+  find('.button').click
 end
 
 def clickElementBy (type, value)
@@ -36,11 +40,10 @@ def clickElementBy (type, value)
 end
 
 def gotoShoppingCart
-  clickElementBy("xpath", "//a[@id=\"GotoShoppingCart\"]")
+  find('#GotoShoppingCart').click
 end
 
 def verifyItemShowInShoppingCart (keyword)
-  bookTitle=@driver.find_element :class => "p-name"
-  bookTitle.text.should == keyword
+  page.should have_css(".p-name", :text => keyword)
 end
   
