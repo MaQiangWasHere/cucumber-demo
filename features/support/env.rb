@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'selenium-webdriver'
 require 'capybara/cucumber'
+require 'gizmo'
+World(Gizmo::Helpers)
 
 Capybara.default_driver= :selenium
 
